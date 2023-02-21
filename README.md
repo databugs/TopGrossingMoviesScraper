@@ -29,4 +29,4 @@ For each movie, the spider will follow its URL to extract the following details 
 - Role
 - ID
 
-The extracted data will be saved in JSON format in the output.json file.
+The extracted data will be saved in JSON format in the topgrossingmovies.json file, and in the data folder.
