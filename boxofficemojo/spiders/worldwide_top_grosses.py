@@ -89,9 +89,9 @@ class BoxOfficeMojoSpider(scrapy.Spider):
         crew_role = response.css("#principalCrew td + td::text").extract()
         crew_id = [item.split("/")[4] for item in response.css("#principalCrew td a::attr(href)").extract()]
 
-        # Initialize the list hold all crew and cast items
-
+        # Initialize the list to hold all crew items
         crew_items: list = []
+        
         # Create a CrewItem object for each member of the crew
         for member in zip(crew_name, crew_role, crew_id):
             name, role, id = member
@@ -101,8 +101,10 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                 name=name
             )
             crew_items.append(crew)
-
+            
+        # Initialize the list to hold all cast items
         cast_items: list = []
+        
         # Extract the cast information
         cast_name = response.css(
             "#principalCast td .a-link-normal::text").extract()
