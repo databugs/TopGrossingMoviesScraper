@@ -23,7 +23,7 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                     }
 
     
-    def parse(self, response)-> dict:
+    def parse(self, response) -> dict:
         """
         Parse the response to extract movie details and follow pagination links.
 
@@ -53,14 +53,12 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                 movie_id=movie_id
                 )
             # Follow the movie URL to parse the cast and crew data
-            
+
             cast_crew_url = cast_crew_base_url(movie_id)
-            
+
             yield response.follow(url=cast_crew_url, callback=self.parse_movie_page, meta={"movie": movie})
-            
-        # Follow pagination links
-        has_next_page = response.css(".a-last a::attr(href)").get()
-        if has_next_page:
+
+        if has_next_page := response.css(".a-last a::attr(href)").get():
             next_page_url = response.urljoin(has_next_page)
             yield scrapy.Request(url=next_page_url, callback=self.parse)
             
@@ -76,17 +74,17 @@ class BoxOfficeMojoSpider(scrapy.Spider):
         """
         # Retrieve the movie item from the response's metadata
         movie: MovieItem = response.meta["movie"] 
-        
+
         # Extract the crew information
         crew_name = response.css("#principalCrew td .a-link-normal::text").extract()
-        
+
         crew_role = response.css("#principalCrew td + td::text").extract()
         crew_id = [item.split("/")[4] for item in response.css("#principalCrew td a::attr(href)").extract()]
-        
+
         items: list = [movie]
-        
+
         # Initialize the list hold all crew and cast items
-    
+
         crew_items: list = []
         # Create a CrewItem object for each member of the crew
         for member in zip(crew_name, crew_role, crew_id):
@@ -97,13 +95,13 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                 name=name
             )
             crew_items.append(crew)
-            
+
         cast_items: list = []
         # Extract the cast information
         cast_name = response.css("#principalCast td .a-link-normal::text").extract()
         cast_role = response.css("#principalCast td + td .a-expander-partial-collapse-content::text").extract()
         cast_id = [url.split("/")[4]  for url in response.css("#principalCast td a::attr(href)").extract() if url.startswith("http")]  
-        
+
         # Create a CastItem object for each member of the cast
         for member in zip(cast_name, cast_role, cast_id):
             name, role, id = member
@@ -112,14 +110,9 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                 role=role,
                 name=name
             )
-            
+
             cast_items.append(cast)
-            
-        movie_details = MovieDetails(
-            id=movie.movie_id,
-            info=movie,
-            crew=crew_items,
-            cast=cast_items
+
+        yield MovieDetails(
+            id=movie.movie_id, info=movie, crew=crew_items, cast=cast_items
         )
-    
-        yield movie_details
