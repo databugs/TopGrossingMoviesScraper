@@ -34,14 +34,14 @@ class BoxOfficeMojoSpider(scrapy.Spider):
         Yields:
             A dictionary containing the movie details as key-value pairs.
         """
-        rows = response.css("tr")[1:]
+        rows: list = response.css("tr")[1:]
         for row in rows:
-            title = row.css(".mojo-field-type-title .a-link-normal::text").get()
+            title: str = row.css(".mojo-field-type-title .a-link-normal::text").get()
             worldwide_lifetime_gross, domestic_lifetime_gross, international_lifetime_gross = [clean_money_value(item) for item in row.css(".mojo-field-type-money::text").extract()]
-            year = row.css('.mojo-field-type-year .a-link-normal::text, .mojo-field-type-year:not(:has(a))::text').extract_first(default='')
-            rank = row.css(".mojo-field-type-rank::text").get().strip()
-            movie_url = row.css(".mojo-field-type-title a::attr(href)").get()
-            movie_id = row.css(".mojo-field-type-title a::attr(href)").get().split("/")[2]
+            year: str = row.css('.mojo-field-type-year .a-link-normal::text, .mojo-field-type-year:not(:has(a))::text').extract_first(default='')
+            rank: str = row.css(".mojo-field-type-rank::text").get().strip()
+            movie_url: str = row.css(".mojo-field-type-title a::attr(href)").get()
+            movie_id: str = row.css(".mojo-field-type-title a::attr(href)").get().split("/")[2]
 
             movie = MovieItem(
                 title=title, 
@@ -60,7 +60,7 @@ class BoxOfficeMojoSpider(scrapy.Spider):
             yield response.follow(url=cast_crew_url, callback=self.parse_movie_page, meta={"movie": movie})
 
         if has_next_page := response.css(".a-last a::attr(href)").get():
-            next_page_url = response.urljoin(has_next_page)
+            next_page_url: str = response.urljoin(has_next_page)
             yield scrapy.Request(url=next_page_url, callback=self.parse)
             
     def parse_movie_page(self, response: Response) -> MovieDetails:
