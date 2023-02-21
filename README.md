@@ -31,3 +31,6 @@ For each movie, the spider will follow its URL to extract the following details 
 - ID
 
 The extracted data will be saved in JSON format in the '`topgrossingmovies.json` file, and in the `/data/` folder.
+
+## Workflow
+All configurations are in  `scrapy.yml`
