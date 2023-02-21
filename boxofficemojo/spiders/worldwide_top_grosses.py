@@ -1,4 +1,5 @@
 import scrapy
+from scrapy.http import Response
 from boxofficemojo.items import MovieItem, CrewItem, CastItem, MovieDetails
 from boxofficemojo.helper_functions import cast_crew_base_url, clean_money_value
 
@@ -6,9 +7,9 @@ class BoxOfficeMojoSpider(scrapy.Spider):
     """
     A spider to scrape the worldwide top lifetime grossing movies from Box Office Mojo.
     """
-    name = "boxofficemojo"
-    allowed_domains = ["boxofficemojo.com"]
-    start_urls = ["https://www.boxofficemojo.com/chart/ww_top_lifetime_gross/?area=XWW"]
+    name: str = "boxofficemojo"
+    allowed_domains: list = ["boxofficemojo.com"]
+    start_urls: list = ["https://www.boxofficemojo.com/chart/ww_top_lifetime_gross/?area=XWW"]
     
     custom_settings = {
                         "FEEDS": {
@@ -23,7 +24,7 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                     }
 
     
-    def parse(self, response) -> dict:
+    def parse(self, response: Response) -> Response:
         """
         Parse the response to extract movie details and follow pagination links.
 
@@ -54,7 +55,7 @@ class BoxOfficeMojoSpider(scrapy.Spider):
                 )
             # Follow the movie URL to parse the cast and crew data
 
-            cast_crew_url = cast_crew_base_url(movie_id)
+            cast_crew_url: str = cast_crew_base_url(movie_id)
 
             yield response.follow(url=cast_crew_url, callback=self.parse_movie_page, meta={"movie": movie})
 
@@ -62,7 +63,7 @@ class BoxOfficeMojoSpider(scrapy.Spider):
             next_page_url = response.urljoin(has_next_page)
             yield scrapy.Request(url=next_page_url, callback=self.parse)
             
-    def parse_movie_page(self, response):
+    def parse_movie_page(self, response: Response) -> MovieDetails:
         """
         Parse the response to extract the cast and crew data.
 
