@@ -3,7 +3,8 @@ A Python Scrapy spider to scrape the worldwide top lifetime grossing movies from
 
 ## Installation
 1. Clone this repository: git clone https://github.com/databugs/TopGrossingMoviesScraper.git
-2. Install the required packages: ```pip install -r requirements.txt```
+2. Create and activate a virtual environment
+3. Install the required packages: ```pip install -r requirements.txt```
 
 ## Usage
 Run the spider using the following command: 
