@@ -2,7 +2,7 @@
 A Python Scrapy spider to scrape the worldwide top lifetime grossing movies from Box Office Mojo and extract their cast and crew details.
 
 ## Installation
-1. Clone this repository: git clone https://github.com/databugs/boxofficemojo-scraper.git
+1. Clone this repository: git clone https://github.com/databugs/TopGrossingMoviesScraper.git
 2. Install the required packages: ```pip install -r requirements.txt```
 
 ## Usage
