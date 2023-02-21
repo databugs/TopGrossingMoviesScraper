@@ -31,6 +31,9 @@ class CastItem(BaseModel):
     role: str
     
 class MovieDetails(BaseModel):
+    class config:
+        extra = Extra.forbid
+        
     id: str
     info: MovieItem
     crew: List[CrewItem]
