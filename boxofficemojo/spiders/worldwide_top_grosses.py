@@ -2,6 +2,7 @@ import scrapy
 from scrapy.http import Response
 from boxofficemojo.items import MovieItem, CrewItem, CastItem, MovieDetails
 from boxofficemojo.helper_functions import cast_crew_base_url, clean_money_value
+from faker import Faker
 
 
 class BoxOfficeMojoSpider(scrapy.Spider):
@@ -10,8 +11,8 @@ class BoxOfficeMojoSpider(scrapy.Spider):
     """
     name: str = "boxofficemojo"
     allowed_domains: list = ["boxofficemojo.com"]
-    start_urls: list = [
-        "https://www.boxofficemojo.com/chart/ww_top_lifetime_gross/?area=XWW"]
+    # start_urls: list = [
+    #     "https://www.boxofficemojo.com/chart/ww_top_lifetime_gross/?area=XWW"]
 
     custom_settings = {
         "FEEDS": {
@@ -24,6 +25,25 @@ class BoxOfficeMojoSpider(scrapy.Spider):
             }
         },
     }
+    
+    def start_requests(self):
+        fake = Faker()
+        headers: dict = {
+            'User-Agent': fake.user_agent(),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Cache-Control": "max-age=0"
+            
+        }
+        url = "https://www.boxofficemojo.com/chart/ww_top_lifetime_gross/?area=XWW"
+        yield scrapy.Request(url, headers=headers, callback=self.parse)
 
     def parse(self, response: Response) -> Response:
         """
