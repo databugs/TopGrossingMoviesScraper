@@ -21,7 +21,7 @@ The spider will extract the following details for each movie:
 - International lifetime gross
 - Year
 - Rank
-- Movie URL
+- Movie URL (relative url)
 - Movie ID
 
 For each movie, the spider will follow its URL to extract the following details for its cast and crew:
@@ -33,6 +33,12 @@ For each movie, the spider will follow its URL to extract the following details 
 The extracted data will be saved in JSON format in the `topgrossingmovies.json` file, and in the `/data/` folder.
 
 ## Workflow
-All configurations are in  `scrapy.yml`
-- Schedule: Runs 11:49 PM UTC every
-- `topgrossingmovies.json` will only change when there is a difference between the saved and scraped data
+The GitHub Actions workflow will run on a schedule and perform the following steps:
+
+1.  Checkout the repository's content
+2.  Set up Python with version 3.10
+3.  Install dependencies using pip
+4.  Fetch the top grossing movies by running the `boxofficemojo` spider
+5.  Commit and push changes to the repository if the data has changed
+
+The workflow is scheduled to run every day at 12:49 AM UTC.
