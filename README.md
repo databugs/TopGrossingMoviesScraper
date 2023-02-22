@@ -30,7 +30,9 @@ For each movie, the spider will follow its URL to extract the following details 
 - Role
 - ID
 
-The extracted data will be saved in JSON format in the '`topgrossingmovies.json` file, and in the `/data/` folder.
+The extracted data will be saved in JSON format in the `topgrossingmovies.json` file, and in the `/data/` folder.
 
 ## Workflow
 All configurations are in  `scrapy.yml`
+- Schedule: Runs 11:49 PM UTC every
+- `topgrossingmovies.json` will only change when there is a difference between the saved and scraped data
