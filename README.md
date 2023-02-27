@@ -41,4 +41,4 @@ The GitHub Actions workflow will run on a schedule and perform the following ste
 4.  Fetch the top grossing movies by running the `boxofficemojo` spider
 5.  Commit and push changes to the repository if the data has changed
 
-The workflow is scheduled to run every day at 12:49 AM UTC.
+The workflow is scheduled to run every monday at 12:49 AM UTC.
